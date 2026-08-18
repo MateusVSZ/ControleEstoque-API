@@ -4,8 +4,10 @@
  */
 package br.com.mts.estoque.api.controllers;
 
-import br.com.mts.estoque.Repository.CategoriaRepository;
-import br.com.mts.estoque.domain.model.Categoria;
+import br.com.mts.estoque.repositories.CategoriaByValorTotalProjection;
+import br.com.mts.estoque.repositories.CategoriaRepository;
+import br.com.mts.estoque.domain.models.Categoria;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,13 @@ public class CategoriaController {
         return result;
     }
 
+    @GetMapping("/categoria/resumo")
+    public List<CategoriaByValorTotalProjection> ValorTotalByCategoria (){
+    List<CategoriaByValorTotalProjection> result = categoriaRepository.ValorTotalByCategoria();
+        return result;
+        
+    }
+
     @GetMapping("/categoria/{Id}")
     public ResponseEntity<Categoria> findById(@PathVariable Long Id) {
         Optional<Categoria> result = categoriaRepository.findById(Id);
@@ -50,7 +59,7 @@ public class CategoriaController {
     }
 
     @GetMapping("/categoria/nome/{nome}")
-    public ResponseEntity<List<Categoria>> findByCategoria(@PathVariable String nome) {
+    public ResponseEntity<List<Categoria>> findByCategoria(@PathVariable @Valid String nome ) {
         List<Categoria> result = categoriaRepository.findByCategoriaContainingIgnoreCase(nome);
         if (!result.isEmpty()) {
 
@@ -88,11 +97,8 @@ public class CategoriaController {
             return ResponseEntity.noContent().build();
 
         } else {
-            return ResponseEntity.notFound().build(); 
+            return ResponseEntity.notFound().build();
         }
 
     }
 }
-
-
-

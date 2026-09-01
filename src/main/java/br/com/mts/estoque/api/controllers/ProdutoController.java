@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package br.com.mts.estoque.api.controllers;
 
 import br.com.mts.estoque.repositories.ProdutoRepository;
@@ -46,6 +42,8 @@ public class ProdutoController {
      * o valor, dá erro pq se for só result ele não sabe se tem ou não é só a
      * caixa.
      *
+     * @param id
+     * @return
      */
     @GetMapping("/produto/{id}")
     public ResponseEntity<Produto> findById(@PathVariable Long id) {
@@ -59,7 +57,7 @@ public class ProdutoController {
     }
 
     @GetMapping("/produto/nome/{nome}")
-    public ResponseEntity<List<Produto>> findByNameContainingIgnoreCase(@PathVariable @Valid String nome) {
+    public ResponseEntity<List<Produto>> findByNameContainingIgnoreCase(@PathVariable String nome) {
         List<Produto> result = produtoRepository.findByNomeContainingIgnoreCase(nome);
         if (!result.isEmpty()) {
             return ResponseEntity.ok(result);
@@ -78,10 +76,10 @@ public class ProdutoController {
     }
 
     @PutMapping("/produto/{id}")
-    public ResponseEntity<Produto> atualizar(@PathVariable Long id, @RequestBody Produto produto) {
+    public ResponseEntity<Produto> atualizar(@PathVariable Long id, @RequestBody @Valid Produto produto) {
 
         if (produtoRepository.existsById(id)) {
-            produto.setId_produto(id);
+            produto.setId(id);
             produto = produtoRepository.save(produto);
             return ResponseEntity.ok(produto);
         } else {

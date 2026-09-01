@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package br.com.mts.estoque.domain.models;
 
 import jakarta.persistence.Column;
@@ -9,8 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.Valid;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
@@ -20,46 +18,47 @@ import java.math.BigDecimal;
  * @author digma
  */
 @Entity
+@Table(name="produto")
 public class Produto {
+    
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_produto;
+    private Long id;
     
     @ManyToOne
+    @JoinColumn(name = "categoria_id")
     private Categoria categoria;
-    
-    
-    @Valid
+   
     @Size(max = 120)
-    @NotNull
+    @NotBlank
     private String nome;
-    
-    
-    @Valid
+   
     @NotNull
-    @Column(name = "valor_unitario")
-    private BigDecimal valor;
-
-    private int quantidade;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal valor_unitario;
+    
+    @NotNull
+    @Column(name = "quantidade",precision = 10, scale = 2)
+    private BigDecimal saldo;
     
     public Produto() {
     }
 
-    public Produto(Long id_produto, Categoria categoria, String nome, BigDecimal valor, int quantidade) {
-        this.id_produto = id_produto;
+    public Produto(Long id, Categoria categoria, String nome, BigDecimal valor_unitario, BigDecimal saldo) {
+        this.id = id;
         this.categoria = categoria;
         this.nome = nome;
-        this.valor = valor;
-        this.quantidade = quantidade;
+        this.valor_unitario = valor_unitario;
+        this.saldo = saldo;
     }
 
-    public Long getId_produto() {
-        return id_produto;
+    public Long getId() {
+        return id;
     }
 
-    public void setId_produto(Long id_produto) {
-        this.id_produto = id_produto;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Categoria getCategoria() {
@@ -73,29 +72,25 @@ public class Produto {
     public String getNome() {
         return nome;
     }
-    public int quantidade(){
-        return quantidade;
-    }
 
     public void setNome(String nome) {
         this.nome = nome;
     }
-    public void setQuantidade(int quantidade){
-        this.quantidade = quantidade;
-       
-    }
 
     public BigDecimal getValor_unitario() {
-        return valor;
+        return valor_unitario;
     }
 
-    public void setValor_unitario(BigDecimal valor) {
-        this.valor = valor;
+    public void setValor_unitario(BigDecimal valor_unitario) {
+        this.valor_unitario = valor_unitario;
     }
-    
-    
-  
-    
-    
-    
+
+    public BigDecimal getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(BigDecimal saldo) {
+        this.saldo = saldo;
+    }
+
 }

@@ -43,6 +43,16 @@ public class MovimentoController {
         return result;
     }
 
+    @GetMapping("/movimento/{id}")
+    public ResponseEntity<Movimento> findById(@PathVariable Long id) {
+        Optional<Movimento> result = movimentoRepository.findById(id);
+
+        if (result.isPresent()) {
+            return ResponseEntity.ok(result.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @GetMapping("/movimento/saidas")
     public ResponseEntity<List<Movimento>> SaidasProduto(Movimento movimento) {
         List<Movimento> saidas = movimentoRepository.findByQtdLessThanOrderByDataMovimentoDesc(BigDecimal.ZERO);
@@ -69,7 +79,7 @@ public class MovimentoController {
         Movimento result = movimentoService.saldo(movimento);
         return result;
     }
-   
+
     @PostMapping("/movimento/atualiza")
     public ResponseEntity<Movimento> atualizaEstoque(@RequestBody @Valid MovimentoDTO movtoDTO) {
 

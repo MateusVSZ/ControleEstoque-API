@@ -29,20 +29,21 @@ public class Movimento {
     @JoinColumn(name = "id_produto")
     private Produto produto;
 
-    private LocalDateTime dataMovimento;
+    @Column(name = "data_movimento")
+    private LocalDateTime dataMvto;
 
     private BigDecimal qtd; // quantidade de entrada ou saida do produto no estoque
 
     public Movimento() {
-        this.dataMovimento = LocalDateTime.now();
+        this.dataMvto = LocalDateTime.now();
     }
 
-    public Movimento(Long id, Produto produto, LocalDateTime dataMovimento, BigDecimal qtd) {
+    public Movimento(Long id, Produto produto, LocalDateTime dataMvto, BigDecimal qtd) {
         this.id = id;
         this.produto = produto;
-        this.dataMovimento = dataMovimento;
+        this.dataMvto = dataMvto;
         this.qtd = qtd;
-        this.dataMovimento = LocalDateTime.now();
+        this.dataMvto = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -62,11 +63,11 @@ public class Movimento {
     }
 
     public LocalDateTime getDataMovimento() {
-        return dataMovimento;
+        return dataMvto;
     }
 
-    public void setDataMovimento(LocalDateTime dataMovimento) {
-        this.dataMovimento = dataMovimento;
+    public void setDataMovimento(LocalDateTime dataMvto) {
+        this.dataMvto = dataMvto;
     }
 
     public BigDecimal getQtd() {

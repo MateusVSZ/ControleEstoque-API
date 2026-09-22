@@ -11,10 +11,8 @@ import br.com.mts.estoque.repositories.MovimentoRepository;
 import br.com.mts.estoque.repositories.ProdutoRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -48,16 +46,16 @@ public class MovimentoService {
     public Movimento atualizaEstoque(MovimentoDTO movtoDTO) {
         
         Produto produtoBusca = produtoRepository.findById(movtoDTO.getIdProduto()).
-                orElseThrow(() -> new RuntimeException("Codigo produto não existe!"));
+                orElseThrow(() -> new RuntimeException("Codigo produto não existe!")); //optional
                 
         // Ok. Produto existe. Segue o jogo.
-        Movimento newMovto = new Movimento();
-        newMovto.setQtd(movtoDTO.getQtd()); //
-        newMovto.setProduto(produtoBusca);
+        Movimento newMovto = new Movimento(); //Instancio um Objeto na variavel
+        newMovto.setQtd(movtoDTO.getQtd());  //Altera a quantidade , pegando a quantidade do meu DTO(Body Json)
+        newMovto.setProduto(produtoBusca); // Altero o produto, pegando o id dele em produtoBusca e alto o setProduto de Movimento
         newMovto.setDataMovimento(LocalDateTime.now());
-        newMovto = movimentoRepository.save(newMovto);
+        newMovto = movimentoRepository.save(newMovto); 
         
-        produtoBusca.setSaldo(movtoDTO.getQtd());
+        produtoBusca.setSaldo(movtoDTO.getQtd()); //altera o saldo do produto com o valor que dei no(Body json)
         produtoRepository.save(produtoBusca);
         
         return newMovto;

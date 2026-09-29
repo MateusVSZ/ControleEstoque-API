@@ -5,7 +5,9 @@
 package br.com.mts.estoque.domain.services;
 
 import br.com.mts.estoque.domain.dtos.RelatorioEstoqueDTO;
+import br.com.mts.estoque.domain.dtos.RelatorioEstoqueSaidasDTO;
 import br.com.mts.estoque.repositories.MovimentoRepository;
+import br.com.mts.estoque.repositories.ProdutoRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,6 +24,9 @@ public class ProdutoService {
 
     @Autowired
     private MovimentoRepository movimentoRepository;
+    
+    @Autowired
+    private ProdutoRepository produtoRepository;
 
     public List<RelatorioEstoqueDTO> gerarRelatorio(LocalDateTime dataInicio, LocalDateTime dataFim) {
 
@@ -40,5 +45,21 @@ public class ProdutoService {
 
         return relatorio;
 
+    }
+
+    public List<RelatorioEstoqueSaidasDTO> gerarRelatorioMaiorSaida(LocalDateTime dataIncio, LocalDateTime dataFim) {
+        List<Object[]> result = produtoRepository.findSaidasMaiorVolume(dataIncio, dataFim);
+        List<RelatorioEstoqueSaidasDTO> relatorioSaidas =  new ArrayList<>();
+        
+        for(Object[] linha : result){
+           RelatorioEstoqueSaidasDTO dto = new RelatorioEstoqueSaidasDTO();
+           dto.setProdutoId(((Number) linha[0]).longValue());
+           dto.setNome((String) linha[1]);
+           dto.setTotalSaidas(((Number) linha[2]).doubleValue());
+           dto.setQtd((BigDecimal) linha[3]);
+           relatorioSaidas.add(dto);
+        
+        }
+        return relatorioSaidas;
     }
 }

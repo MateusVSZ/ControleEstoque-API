@@ -1,6 +1,7 @@
 package br.com.mts.estoque.api.controllers;
 
 import br.com.mts.estoque.domain.dtos.RelatorioEstoqueDTO;
+import br.com.mts.estoque.domain.dtos.RelatorioEstoqueSaidasDTO;
 import br.com.mts.estoque.repositories.ProdutoRepository;
 import br.com.mts.estoque.domain.models.Produto;
 import br.com.mts.estoque.domain.services.ProdutoService;
@@ -75,16 +76,17 @@ public class ProdutoController {
         }
 
     }
-    
+
     /**
      * devolve um relatorio de movimentações com base em dataInicio e dataFim
-     * 
-     * informar a dataInicio e dataFim no formato AAAA-MM-DD na request QueryParams.
-     * 
-     * 
+     *
+     * informar a dataInicio e dataFim no formato AAAA-MM-DD na request
+     * QueryParams.
+     *
+     *
      * @param dataInicio
      * @param dataFim
-     * @return 
+     * @return
      */
     @GetMapping("/relatorio/estoque")
     public ResponseEntity<List<RelatorioEstoqueDTO>> relatorio(
@@ -99,6 +101,21 @@ public class ProdutoController {
         List<RelatorioEstoqueDTO> relatorio = produtoService.gerarRelatorio(inicio, fim);
 
         return ResponseEntity.ok(relatorio);
+    }
+
+    @GetMapping("/relatorio/estoque/saidas")
+    public ResponseEntity<List<RelatorioEstoqueSaidasDTO>> relatorioSaida(
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate dataInicio,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate dataFim) {
+
+        LocalDateTime inicio = (dataInicio != null) ? dataInicio.atStartOfDay() : null;
+        LocalDateTime fim = (dataFim != null) ? dataFim.atTime(23, 59, 59) : null;
+
+        List<RelatorioEstoqueSaidasDTO> relatorioSaidas = produtoService.gerarRelatorioMaiorSaida(inicio, fim);
+
+        return ResponseEntity.ok(relatorioSaidas);
     }
 
     @PostMapping("/produto")

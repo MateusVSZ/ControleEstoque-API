@@ -22,13 +22,13 @@ public interface MovimentoRepository extends JpaRepository<Movimento, Long> {
 
     @Query(value
             = "SELECT p.id, p.nome, p.valor_unitario, "
-            + "       SUM(CASE WHEN m.qtd > 0 THEN m.qtd ELSE 0 END) AS entradas, "
-            + "       SUM(CASE WHEN m.qtd < 0 THEN -m.qtd ELSE 0 END) AS saidas "
-            + "FROM movimento m "
+            + "       SUM(CASE WHEN m.qtd < 0 THEN m.qtd ELSE 0 END) AS entradas, "
+            + "SUM(CASE WHEN m.qtd > 0 THEN -m.qtd ELSE 0 END) AS saidas "
+            + "FROM movimento m " 
             + "JOIN produto p ON p.id = m.id_produto "
             + "WHERE (:dataInicio IS NULL OR m.data_movimento >= :dataInicio) "
             + "AND (:dataFim IS NULL OR m.data_movimento <= :dataFim) "
-            + "GROUP BY p.id, p.nome, p.valor_unitario "
+            + "GROUP BY p.id "
             + "ORDER BY p.id",
             nativeQuery = true
     )
@@ -36,3 +36,4 @@ public interface MovimentoRepository extends JpaRepository<Movimento, Long> {
             @Param("dataFim") LocalDateTime dataFim);
 
 }
+    

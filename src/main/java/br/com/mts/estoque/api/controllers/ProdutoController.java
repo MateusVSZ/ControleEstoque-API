@@ -5,6 +5,7 @@ import br.com.mts.estoque.domain.dtos.RelatorioEstoqueSaidasDTO;
 import br.com.mts.estoque.repositories.ProdutoRepository;
 import br.com.mts.estoque.domain.models.Produto;
 import br.com.mts.estoque.domain.services.ProdutoService;
+import br.com.mts.estoque.repositories.ProdutoPercentualProJection;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author digma
  */
 @RestController
+
 public class ProdutoController {
 
     @Autowired
@@ -37,6 +39,8 @@ public class ProdutoController {
 
     @Autowired
     private ProdutoRepository produtoRepository;
+    
+    
 
     @GetMapping("/produto")
     public List<Produto> findAll() {
@@ -88,7 +92,7 @@ public class ProdutoController {
      * @param dataFim
      * @return
      */
-    @GetMapping("/relatorio/estoque")
+    @GetMapping("/produto/relatorios")
     public ResponseEntity<List<RelatorioEstoqueDTO>> relatorio(
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate dataInicio,
@@ -103,7 +107,7 @@ public class ProdutoController {
         return ResponseEntity.ok(relatorio);
     }
 
-    @GetMapping("/relatorio/estoque/saidas")
+    @GetMapping("/produto/relatorio/saidas")
     public ResponseEntity<List<RelatorioEstoqueSaidasDTO>> relatorioSaida(
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate dataInicio,
@@ -116,6 +120,12 @@ public class ProdutoController {
         List<RelatorioEstoqueSaidasDTO> relatorioSaidas = produtoService.gerarRelatorioMaiorSaida(inicio, fim);
 
         return ResponseEntity.ok(relatorioSaidas);
+    }
+
+    @GetMapping("/produto/relatorio/percentual")
+    public ResponseEntity<List<ProdutoPercentualProJection>> relatorioPercentual() {
+        List<ProdutoPercentualProJection> result = produtoRepository.findProdutosQuantidadeMinMax();
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/produto")

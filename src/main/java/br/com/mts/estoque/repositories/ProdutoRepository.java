@@ -11,10 +11,11 @@ import org.springframework.data.repository.query.Param;
  *
  * @author digma
  */
-public interface ProdutoRepository extends JpaRepository<Produto, Long>{
-     List<Produto> findByNomeContainingIgnoreCase(String produto);
-     
-  @Query(value
+public interface ProdutoRepository extends JpaRepository<Produto, Long> {
+
+    List<Produto> findByNomeContainingIgnoreCase(String produto);
+
+    @Query(value
             = "SELECT p.id, p.nome, p.valor_unitario, "
             + "SUM(CASE WHEN m.qtd < 0 THEN -m.qtd ELSE 0 END) AS saidas "
             + "FROM movimento m "
@@ -27,20 +28,30 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long>{
     )
     List<Object[]> findSaidasMaiorVolume(@Param("dataInicio") LocalDateTime dataInicio,
             @Param("dataFim") LocalDateTime dataFim);
-    
+
     //arrumar query
-    @Query(value= """
-                  SELECT p.id, p.nome, p.valor_unitario, 
-                  (CASE WHEN m.qtd > 0 THEN m.qtd ELSE 0 END) as minimo
-                  (CASE WHEN m.qtd < 100 THEN m.qtd ELSE 0 END) as maximo
-                  FROM movimento m
-                  JOIN produto p ON p.id = m.id_produto
-                  ORDER BY minimo DESC
-                  
-                  
-                  """,nativeQuery=true
-    )List<Produto> findProdutosQuantidadeMinMax();
-    
-             
-    
+    @Query(value = """
+                    SELECT
+                        p.id,
+                        p.nome,
+                        p.valor_unitario,
+                        p.quantidade,
+                        p.id_categoria,
+                        c.categoria,
+                        CASE
+                            WHEN p.quantidade >= 0 and p.quantidade <50 THEN 'Estoque mínimo' 
+                            WHEN p.quantidade =100 THEN 'Estoque máximo'
+                        ELSE 'Estoque na media'
+                        END AS valorMinMax,
+                       ROUND(p.quantidade * 1.0 / 100 , 2) AS totalPercentual
+                   FROM categoria AS c
+                   INNER JOIN produto AS p ON p.id_categoria = c.id
+                    WHERE p.quantidade >= 0
+                      AND p.quantidade <= 100
+                      
+                      ORDER BY totalPercentual DESC;
+                   
+                  """, nativeQuery = true)
+    List<ProdutoPercentualProJection> findProdutosQuantidadeMinMax();
+
 }

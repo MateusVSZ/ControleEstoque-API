@@ -22,7 +22,7 @@ public interface MovimentoRepository extends JpaRepository<Movimento, Long> {
 
     @Query(value
             = "SELECT p.id, p.nome, p.valor_unitario, "
-            + "       SUM(CASE WHEN m.qtd < 0 THEN m.qtd ELSE 0 END) AS entradas, "
+            + "SUM(CASE WHEN m.qtd < 0 THEN m.qtd ELSE 0 END) AS entradas, "
             + "SUM(CASE WHEN m.qtd > 0 THEN -m.qtd ELSE 0 END) AS saidas "
             + "FROM movimento m " 
             + "JOIN produto p ON p.id = m.id_produto "

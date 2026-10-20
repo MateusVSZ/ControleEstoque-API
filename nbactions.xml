@@ -15,6 +15,16 @@
                 <exec.appArgs></exec.appArgs>
                 <exec.mainClass>br.com.mts.estoque.EstoqueApplication</exec.mainClass>
                 <exec.executable>java</exec.executable>
+                <Env.APP_ENVIRONMENT>postgres</Env.APP_ENVIRONMENT>
+                <Env.POSTGRES_HOST>172.16.5.10</Env.POSTGRES_HOST>
+                <Env.POSTGRES_USER>mvss</Env.POSTGRES_USER>
+                <Env.POSTGRES_PASSWORD>senai</Env.POSTGRES_PASSWORD>
+                <Env.POSTGRES_DB>mvss_estoque</Env.POSTGRES_DB>
+                
+                
+                
+                
+                
                 
                 
                 

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,25 +29,26 @@ import org.springframework.web.bind.annotation.RestController;
  * @author digma
  */
 @RestController
+@RequestMapping("/categoria")
 public class CategoriaController {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
 
-    @GetMapping("/categoria")
+    @GetMapping
     public List<Categoria> findAll() {
         List<Categoria> result = categoriaRepository.findAll();
         return result;
     }
 
-    @GetMapping("/categoria/resumo")
+    @GetMapping("/resumo")
     public List<CategoriaByValorTotalProjection> ValorTotalByCategoria (){
     List<CategoriaByValorTotalProjection> result = categoriaRepository.ValorTotalByCategoria();
         return result;
         
     }
 
-    @GetMapping("/categoria/{Id}")
+    @GetMapping("/id/{Id}")
     public ResponseEntity<Categoria> findById(@PathVariable Long Id) {
         Optional<Categoria> result = categoriaRepository.findById(Id);
 
@@ -58,7 +60,7 @@ public class CategoriaController {
         }
     }
 
-    @GetMapping("/categoria/nome/{nome}")
+    @GetMapping("/nome/{nome}")
     public ResponseEntity<List<Categoria>> findByCategoria(@PathVariable @Valid String nome ) {
         List<Categoria> result = categoriaRepository.findByCategoriaContainingIgnoreCase(nome);
         if (!result.isEmpty()) {
@@ -70,14 +72,14 @@ public class CategoriaController {
         }
     }
 
-    @PostMapping("/categoria")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Categoria Adicionar(@RequestBody Categoria categoria) {
         return categoriaRepository.save(categoria);
 
     }
 
-    @PutMapping("/categoria/{Id}")
+    @PutMapping("/id/{Id}")
     public ResponseEntity<Categoria> Atualizar(@PathVariable Long Id, @RequestBody Categoria categoria) {
 
         if (categoriaRepository.existsById(Id)) {
@@ -90,7 +92,7 @@ public class CategoriaController {
         }
     }
 
-    @DeleteMapping("/categoria/{Id}")
+    @DeleteMapping("/id/{Id}")
     public ResponseEntity<Categoria> Deletar(@PathVariable Long Id) {
         if (categoriaRepository.existsById(Id)) {
             categoriaRepository.deleteById(Id);

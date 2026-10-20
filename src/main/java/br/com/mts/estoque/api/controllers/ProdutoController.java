@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author digma
  */
 @RestController
-
+@RequestMapping("/produto")
 public class ProdutoController {
 
     @Autowired
@@ -42,7 +43,7 @@ public class ProdutoController {
     
     
 
-    @GetMapping("/produto")
+    @GetMapping
     public List<Produto> findAll() {
         List<Produto> result = produtoRepository.findAll();
         return result;
@@ -59,7 +60,7 @@ public class ProdutoController {
      * @param id
      * @return
      */
-    @GetMapping("/produto/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Produto> findById(@PathVariable Long id) {
         Optional<Produto> result = produtoRepository.findById(id); //Optional(pode ou nao ter). O Jpa pede ele quando for id
         if (result.isPresent()) {
@@ -70,7 +71,7 @@ public class ProdutoController {
         }
     }
 
-    @GetMapping("/produto/nome/{nome}")
+    @GetMapping("/nome/{nome}")
     public ResponseEntity<List<Produto>> findByNameContainingIgnoreCase(@PathVariable String nome) {
         List<Produto> result = produtoRepository.findByNomeContainingIgnoreCase(nome);
         if (!result.isEmpty()) {
@@ -92,7 +93,7 @@ public class ProdutoController {
      * @param dataFim
      * @return
      */
-    @GetMapping("/produto/relatorios")
+    @GetMapping("/relatorios")
     public ResponseEntity<List<RelatorioEstoqueDTO>> relatorio(
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate dataInicio,
@@ -107,7 +108,7 @@ public class ProdutoController {
         return ResponseEntity.ok(relatorio);
     }
 
-    @GetMapping("/produto/relatorio/saidas")
+    @GetMapping("/relatorio/saidas")
     public ResponseEntity<List<RelatorioEstoqueSaidasDTO>> relatorioSaida(
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate dataInicio,
@@ -122,13 +123,13 @@ public class ProdutoController {
         return ResponseEntity.ok(relatorioSaidas);
     }
 
-    @GetMapping("/produto/relatorio/percentual")
+    @GetMapping("/relatorio/percentual")
     public ResponseEntity<List<ProdutoPercentualProJection>> relatorioPercentual() {
         List<ProdutoPercentualProJection> result = produtoRepository.findProdutosQuantidadeMinMax();
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/produto")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Produto salvar(@RequestBody Produto produto) {
 
@@ -136,7 +137,7 @@ public class ProdutoController {
 
     }
 
-    @PutMapping("/produto/{id}")
+    @PutMapping("/id/{id}")
     public ResponseEntity<Produto> atualizar(@PathVariable Long id, @RequestBody @Valid Produto produto) {
 
         if (produtoRepository.existsById(id)) {
@@ -148,7 +149,7 @@ public class ProdutoController {
         }
     }
 
-    @DeleteMapping("/produto/{id}")
+    @DeleteMapping("/id/{id}")
     public ResponseEntity<Produto> deletar(@PathVariable Long id) {
         if (produtoRepository.existsById(id)) {
             produtoRepository.deleteById(id);
